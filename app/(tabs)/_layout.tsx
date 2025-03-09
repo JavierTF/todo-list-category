@@ -5,6 +5,11 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+interface TabBarIconProps {
+  color: string;
+  focused: boolean;
+}
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
@@ -18,7 +23,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color, focused }: TabBarIconProps) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
         }}
@@ -27,7 +32,7 @@ export default function TabLayout() {
         name="explore"
         options={{
           title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color, focused }: TabBarIconProps) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
         }}
