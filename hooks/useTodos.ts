@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
 import { Todo } from '../types/common.type';
 import { STORAGE_KEY_TODOS } from '../constants/StorageKeys';
 import { StorageService } from '../services/storageService';
@@ -7,10 +6,43 @@ import { StorageService } from '../services/storageService';
 export const useTodos = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertTitle, setAlertTitle] = useState('');
+  const [alertMessage, setAlertMessage] = useState('');
+  const [confirmCallback, setConfirmCallback] = useState<(() => void) | null>(null);
+  const [showCancelButton, setShowCancelButton] = useState(false);
 
   useEffect(() => {
     loadTodos();
   }, []);
+
+  const showAlert = (title: string, message: string) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setConfirmCallback(null);
+    setShowCancelButton(false);
+    setAlertVisible(true);
+  };
+
+  const showConfirmAlert = (title: string, message: string, onConfirm: () => void) => {
+    setAlertTitle(title);
+    setAlertMessage(message);
+    setConfirmCallback(() => onConfirm);
+    setShowCancelButton(true);
+    setAlertVisible(true);
+  };
+
+  const closeAlert = () => {
+    setAlertVisible(false);
+  };
+
+  const handleConfirm = () => {
+    if (confirmCallback) {
+      confirmCallback();
+    }
+    setAlertVisible(false);
+  };
 
   const loadTodos = async (): Promise<void> => {
     try {
@@ -35,11 +67,11 @@ export const useTodos = () => {
 
   const addTodo = async (text: string, categories: string[]): Promise<void> => {
     if (text.trim() === '' || text.length > 100) {
-      Alert.alert('Error', 'La tarea debe tener entre 1 y 100 caracteres');
+      showAlert('Error', 'La tarea debe tener entre 1 y 100 caracteres');
       return;
     }
     if (categories.length === 0) {
-      Alert.alert('Error', 'Seleccione al menos una categoría');
+      showAlert('Error', 'Seleccione al menos una categoría');
       return;
     }
 
@@ -55,7 +87,7 @@ export const useTodos = () => {
       const updatedTodos = [...todos, newTodoItem];
       await saveTodos(updatedTodos);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo crear la tarea');
+      showAlert('Error', 'No se pudo crear la tarea');
       throw error;
     }
   };
@@ -67,7 +99,7 @@ export const useTodos = () => {
       );
       await saveTodos(updatedTodos);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo actualizar la tarea');
+      showAlert('Error', 'No se pudo actualizar la tarea');
       throw error;
     }
   };
@@ -77,23 +109,16 @@ export const useTodos = () => {
       const updatedTodos = todos.filter(todo => todo.id !== id);
       await saveTodos(updatedTodos);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo eliminar la tarea');
+      showAlert('Error', 'No se pudo eliminar la tarea');
       throw error;
     }
   };
 
-  const confirmDeleteTodo = async (id: string): Promise<void> => {
-    Alert.alert(
+  const confirmDeleteTodo = (id: string): void => {
+    showConfirmAlert(
       'Eliminar tarea',
       '¿Estás seguro que deseas eliminar esta tarea?',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        {
-          text: 'Eliminar',
-          style: 'destructive',
-          onPress: () => deleteTodo(id),
-        },
-      ]
+      () => deleteTodo(id)
     );
   };
 
@@ -101,7 +126,7 @@ export const useTodos = () => {
     try {
       await saveTodos(reorderedTodos);
     } catch (error) {
-      Alert.alert('Error', 'No se pudo reordenar las tareas');
+      showAlert('Error', 'No se pudo reordenar las tareas');
       throw error;
     }
   };
@@ -113,6 +138,12 @@ export const useTodos = () => {
     toggleTodo,
     deleteTodo,
     confirmDeleteTodo,
-    reorderTodos
+    reorderTodos,
+    alertVisible,
+    alertTitle,
+    alertMessage,
+    closeAlert,
+    handleConfirm,
+    showCancelButton
   };
 };

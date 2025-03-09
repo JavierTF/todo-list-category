@@ -1,9 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import DraggableFlatList, {
-  ScaleDecorator,
-  RenderItemParams
-} from 'react-native-draggable-flatlist';
+import { StyleSheet, FlatList } from 'react-native';
 import { Todo, Category } from '../../types/common.type';
 import { TodoItem } from './TodoItem';
 
@@ -30,45 +26,39 @@ export const TodoList: React.FC<TodoListProps> = ({
       )
     : todos;
 
-  const renderItem = ({ item, drag, isActive }: RenderItemParams<Todo>) => {
+  const renderItem = ({ item }: { item: Todo }) => {
     return (
-      <ScaleDecorator>
-        <TodoItem
-          todo={item}
-          categories={categories}
-          onToggle={onToggleTodo}
-          onDelete={onDeleteTodo}
-          onLongPress={drag}
-          isActive={isActive}
-        />
-      </ScaleDecorator>
+      <TodoItem
+        todo={item}
+        categories={categories}
+        onToggle={onToggleTodo}
+        onDelete={onDeleteTodo}
+        onLongPress={() => {}}
+        isActive={false}
+      />
     );
   };
 
   return (
-    <DraggableFlatList
+    <FlatList
       data={filteredTodos}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       contentContainerStyle={styles.listContent}
-      onDragEnd={({ data }) => {
-        const updatedTodos = [...todos];
-        
-        data.forEach((filteredItem) => {
-          const originalIndex = updatedTodos.findIndex(t => t.id === filteredItem.id);
-          if (originalIndex !== -1) {
-            updatedTodos[originalIndex] = filteredItem;
-          }
-        });
-        
-        onReorderTodos(updatedTodos);
-      }}
+      style={styles.list}
+      showsVerticalScrollIndicator={true}
+      bounces={true}
+      overScrollMode="always"
     />
   );
 };
 
 const styles = StyleSheet.create({
+  list: {
+    flex: 1,
+  },
   listContent: {
     padding: 20,
+    paddingBottom: 100,
   },
 });

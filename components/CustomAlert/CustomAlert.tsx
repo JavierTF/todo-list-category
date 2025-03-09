@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
 
 interface CustomAlertProps {
@@ -6,14 +6,29 @@ interface CustomAlertProps {
   title: string;
   message: string;
   onClose: () => void;
+  onConfirm?: () => void;
+  showCancelButton?: boolean;
+  confirmText?: string;
+  cancelText?: string;
 }
 
 export const CustomAlert: React.FC<CustomAlertProps> = ({ 
   visible, 
   title, 
   message, 
-  onClose 
+  onClose,
+  onConfirm,
+  showCancelButton = false,
+  confirmText = 'Aceptar',
+  cancelText = 'Cancelar'
 }) => {
+  const handleConfirm = () => {
+    if (onConfirm) {
+      onConfirm();
+    }
+    onClose();
+  };
+
   return (
     <Modal
       transparent={true}
@@ -25,9 +40,26 @@ export const CustomAlert: React.FC<CustomAlertProps> = ({
         <View style={styles.alertContainer}>
           <Text style={styles.title}>{title}</Text>
           <Text style={styles.message}>{message}</Text>
-          <TouchableOpacity style={styles.button} onPress={onClose}>
-            <Text style={styles.buttonText}>Aceptar</Text>
-          </TouchableOpacity>
+          
+          <View style={styles.buttonContainer}>
+            {showCancelButton && (
+              <TouchableOpacity 
+                style={[styles.button, styles.cancelButton]} 
+                onPress={onClose}
+              >
+                <Text style={styles.cancelButtonText}>{cancelText}</Text>
+              </TouchableOpacity>
+            )}
+            <TouchableOpacity 
+              style={[
+                styles.button, 
+                showCancelButton ? styles.confirmButton : styles.singleButton
+              ]} 
+              onPress={handleConfirm}
+            >
+              <Text style={styles.confirmButtonText}>{confirmText}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -47,6 +79,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   title: {
     fontSize: 18,
@@ -60,14 +100,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#1a1a1a',
   },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
   button: {
-    backgroundColor: '#007AFF',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    minWidth: 100,
+    alignItems: 'center',
   },
-  buttonText: {
+  singleButton: {
+    backgroundColor: '#007AFF',
+    width: '100%',
+  },
+  confirmButton: {
+    backgroundColor: '#007AFF',
+    flex: 1,
+    marginLeft: 10,
+  },
+  cancelButton: {
+    backgroundColor: '#F2F2F2',
+    flex: 1,
+    marginRight: 10,
+  },
+  confirmButtonText: {
     color: 'white',
+    fontWeight: '600',
+  },
+  cancelButtonText: {
+    color: '#333333',
     fontWeight: '600',
   },
 });

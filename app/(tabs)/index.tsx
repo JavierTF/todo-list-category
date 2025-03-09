@@ -1,17 +1,12 @@
-import React, { useState } from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity
-} from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { TodoList } from '../../components/TodoList';
 import { TodoInput } from '../../components/TodoInput';
 import { TodoFilter } from '../../components/TodoFilter';
+import { CustomAlert } from '../../components/CustomAlert/CustomAlert';
 
 import { useCategories } from '../../hooks/useCategories';
 import { useTodos } from '../../hooks/useTodos';
@@ -24,11 +19,17 @@ const Home: React.FC = () => {
     addTodo, 
     toggleTodo, 
     confirmDeleteTodo,
-    reorderTodos
+    reorderTodos,
+    alertVisible,
+    alertTitle,
+    alertMessage,
+    closeAlert,
+    handleConfirm,
+    showCancelButton
   } = useTodos();
   
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
-  const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [activeFilters, setActiveFilters] = React.useState<string[]>([]);
+  const [showFilters, setShowFilters] = React.useState<boolean>(false);
 
   const toggleCategoryFilter = (categoryId: string) => {
     setActiveFilters(prev => {
@@ -87,6 +88,17 @@ const Home: React.FC = () => {
           onToggleTodo={toggleTodo}
           onDeleteTodo={confirmDeleteTodo}
           onReorderTodos={reorderTodos}
+        />
+        
+        <CustomAlert
+          visible={alertVisible}
+          title={alertTitle}
+          message={alertMessage}
+          onClose={closeAlert}
+          onConfirm={handleConfirm}
+          showCancelButton={showCancelButton}
+          confirmText={showCancelButton ? "Eliminar" : "Aceptar"}
+          cancelText="Cancelar"
         />
       </SafeAreaView>
     </GestureHandlerRootView>
