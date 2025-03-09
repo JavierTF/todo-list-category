@@ -26,7 +26,8 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.javiertoussentfis.expobasics",
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": "1.0.0",
+      "permissions": ["NOTIFICATIONS"]
     },
     "web": {
       "bundler": "metro",
@@ -44,12 +45,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "8ac183fb-2152-4ad5-a647-d02913587971"
+        "projectId": "1d30c6ce-be3f-439e-8d76-b49682f0f7a8"
       }
     },
-    "owner": "javiertoussentfis",
-    "updates": {
-      "url": "https://u.expo.dev/8ac183fb-2152-4ad5-a647-d02913587971"
-    }
+    "owner": "javiertoussentfis"
   }
 }
