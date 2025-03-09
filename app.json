@@ -13,14 +13,18 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.javiertoussentfis.expobasics"
+      "package": "com.javiertoussentfis.expobasics",
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "bundler": "metro",
@@ -40,6 +44,10 @@
       "eas": {
         "projectId": "8ac183fb-2152-4ad5-a647-d02913587971"
       }
+    },
+    "owner": "javiertoussentfis",
+    "updates": {
+      "url": "https://u.expo.dev/8ac183fb-2152-4ad5-a647-d02913587971"
     }
   }
 }
