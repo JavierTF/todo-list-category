@@ -40,6 +40,9 @@ npx expo start --clear
    - Press 'a' to run on an Android emulator
    - Press 'i' to run on an iOS simulator
 
+### Download the APK
+https://drive.google.com/file/d/13-UqOG-yBWkIu4OMpvP9q93wfT_M600l/view?usp=drive_link
+
 ### Building the APK
 
 To create a standalone APK for Android:
